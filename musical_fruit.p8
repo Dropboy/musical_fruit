@@ -6,6 +6,7 @@ local actual_time = 1200
 local buttpress = false
 local mode = "start"
 
+level = "bxbxbx"
 
 function _init()
  music(0)
@@ -14,8 +15,36 @@ function _init()
  beat.y = 80
  beat.dx = 0
  beat.dy = 15
- 
+ beat.alive = true
+ beat.gap = 0
  score = 0
+
+ build_beat(level)
+end
+
+function build_beat(lvl)
+
+local i,j,o,chr,last
+ beat_x={}
+ beat_y={}
+ beat_v={}
+ j = 0
+
+ if mode == "game" then
+  for i = 1,4 do
+
+   j+=1
+
+   chr=sub(lvl,i,i)
+   
+   if chr == "b" then
+    last = "b"
+    add(beat_x, 4 + ( (j-1) % 11 ) * (beat_w + 2 ) )
+    add(beat_y, 30 + flr ( (j-1) / 11 ) * ( beat_h + 2 ) )
+    add(beat_v,true)
+   end
+  end
+ end
 end
 
 function _update60()
@@ -60,8 +89,9 @@ end
 
 function update_game()
 
- if buttpress == true and beat.dx == 60 then
+ if buttpress == true and beat.dx == 66 then
   score += 1
+  beat.alive = false
  end
  -- beat animation looping
  if beat.dx < 140 then
@@ -82,15 +112,19 @@ function draw_start()
 end
 
 function draw_game()
+  j=0
+
  cls(2)
  print(flr(timer),5,5,7)
  print(score,25,5,7)
- print(beat.dx,60,5,7)
- draw_beat()
+ print(j,60,5,7)
 end
 
-function draw_beat()
- rect(beat.x+beat.dx,beat.y,(beat.x+12)+beat.dx,beat.y+12,7)
+function draw_beat(x,y)
+ if beat.alive == true then
+   rect((beat.x+beat.dx),beat.y,beat.x+beat.dx,beat.y+12,7)
+ else
+ end
 end
 
 function draw_gameover()
