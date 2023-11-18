@@ -1,25 +1,31 @@
 pico-8 cartridge // http://www.pico-8.com
 version 41
 __lua__
-local timer = 21
-local actual_time = 1200
-local buttpress = false
-local mode = "start"
 
-level = "bxbxbx"
+timer = 21
+actual_time = 1200
+
+buttpress = false
+
+level = "bxbxbxbxbxbx"
 
 function _init()
  music(0)
  beat={}
+ beat.h = 4
+ beat.w = 4
  beat.x = -12
  beat.y = 80
- beat.dx = 0
+ beat.dx = 1
  beat.dy = 15
  beat.alive = true
  beat.gap = 0
+
  score = 0
 
  build_beat(level)
+
+ mode = "start"
 end
 
 function build_beat(lvl)
@@ -28,9 +34,10 @@ local i,j,o,chr,last
  beat_x={}
  beat_y={}
  beat_v={}
+ beat_c={}
+
  j = 0
 
- if mode == "game" then
   for i = 1,4 do
 
    j+=1
@@ -39,12 +46,12 @@ local i,j,o,chr,last
    
    if chr == "b" then
     last = "b"
-    add(beat_x, 4 + ( (j-1) % 11 ) * (beat_w + 2 ) )
-    add(beat_y, 30 + flr ( (j-1) / 11 ) * ( beat_h + 2 ) )
-    add(beat_v,true)
+    add(beat_x, 4 + ( (j-1) % 11 ) * (beat.w + 2 ) )
+    add(beat_y, 30 + flr ( (j-1) / 11 ) * ( beat.h + 2 ) )
+    add(beat_v, true)
+    add(beat_c, 8)
    end
   end
- end
 end
 
 function _update60()
@@ -55,8 +62,8 @@ function _update60()
    mode = "game"
   end
  elseif mode == "game" then
-  update_game()
   draw_game()
+  update_game()
   btnprs()
  elseif mode == "gameover" then
   if btnp(❎) then
@@ -88,17 +95,6 @@ function timerandcountdown()
 end
 
 function update_game()
-
- if buttpress == true and beat.dx == 66 then
-  score += 1
-  beat.alive = false
- end
- -- beat animation looping
- if beat.dx < 140 then
-  beat.dx += 1
- else
-  beat.dx = 0
- end
  -- timer counts down from 20
  if timer > 0 then
   timer -= 1/60
@@ -112,19 +108,19 @@ function draw_start()
 end
 
 function draw_game()
-  j=0
-
  cls(2)
+
+ -- draw beats
+ for i=1,#beat_x do
+  if beat_v[i] then
+   rectfill(beat_x[i]+beat.dx,beat_y[i],beat_x[i]+beat.w,beat_y[i]+beat.h,beat_c[1])
+   beat.dx += beat.dx
+  end
+ end
+
  print(flr(timer),5,5,7)
  print(score,25,5,7)
- print(j,60,5,7)
-end
-
-function draw_beat(x,y)
- if beat.alive == true then
-   rect((beat.x+beat.dx),beat.y,beat.x+beat.dx,beat.y+12,7)
- else
- end
+ print(beat_x[1],60,5,7)
 end
 
 function draw_gameover()
