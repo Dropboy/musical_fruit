@@ -12,11 +12,11 @@ level = "bxbxbxbxbxbx"
 function _init()
  music(0)
  beat={}
- beat.h = 4
- beat.w = 4
+ beat.h = 8
+ beat.w = 8
  beat.x = -12
  beat.y = 80
- beat.dx = 1
+ beat.dx = 2
  beat.dy = 15
  beat.alive = true
  beat.gap = 0
@@ -47,9 +47,9 @@ local i,j,o,chr,last
    if chr == "b" then
     last = "b"
     add(beat_x, 4 + ( (j-1) % 11 ) * (beat.w + 2 ) )
-    add(beat_y, 30 + flr ( (j-1) / 11 ) * ( beat.h + 2 ) )
+    add(beat_y, 80 + flr ( (j-1) / 11 ) * ( beat.h + 2 ) )
     add(beat_v, true)
-    add(beat_c, 8)
+    add(beat_c, 7)
    end
   end
 end
@@ -112,15 +112,22 @@ function draw_game()
 
  -- draw beats
  for i=1,#beat_x do
-  if beat_v[i] then
-   rectfill(beat_x[i]+beat.dx,beat_y[i],beat_x[i]+beat.w,beat_y[i]+beat.h,beat_c[1])
-   beat.dx += beat.dx
+  if beat_v[i] == true then
+   rectfill(beat_x[i],beat_y[i],beat_x[i]+beat.w,beat_y[i]+beat.h,beat_c[1])
+   if beat_x[i] > 128 then
+    beat_x[i] = -4
+   end
+   if beat_x[i] == 65 and buttpress == true then
+    beat_v[i] = false
+    score += 1
+   end 
   end
+  beat_x[i] += beat.dx
  end
-
+ circ(63,102,5,7)
  print(flr(timer),5,5,7)
  print(score,25,5,7)
- print(beat_x[1],60,5,7)
+ print(buttpress,60,5,7)
 end
 
 function draw_gameover()
