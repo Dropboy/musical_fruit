@@ -39,7 +39,7 @@ local i,j,o,chr,last
 
  j = 0
 
-  for i = 1,4 do
+  for i = 1,8 do
 
    j+=1
 
