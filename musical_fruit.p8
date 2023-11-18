@@ -14,9 +14,10 @@ function _init()
  beat={}
  beat.h = 8
  beat.w = 8
+ beat.r = 4
  beat.x = -12
  beat.y = 80
- beat.dx = 2
+ beat.dx = 1
  beat.dy = 15
  beat.alive = true
  beat.gap = 0
@@ -67,6 +68,7 @@ function _update60()
   btnprs()
  elseif mode == "gameover" then
   if btnp(❎) then
+   _init()
    mode = "start"
    timer = 21
    actual_time = 1200
@@ -113,18 +115,20 @@ function draw_game()
  -- draw beats
  for i=1,#beat_x do
   if beat_v[i] == true then
-   rectfill(beat_x[i],beat_y[i],beat_x[i]+beat.w,beat_y[i]+beat.h,beat_c[1])
+   circfill(beat_x[i],beat_y[i],beat.r,beat_c[1])
    if beat_x[i] > 128 then
     beat_x[i] = -4
    end
-   if beat_x[i] == 65 and buttpress == true then
+   if beat_x[i] >= 60 and beat_x[i] <= 70 and btn(❎) then
     beat_v[i] = false
+    beat_c[i] = 8
     score += 1
    end 
   end
   beat_x[i] += beat.dx
  end
  circ(63,102,5,7)
+ circ(63,80,5,7)
  print(flr(timer),5,5,7)
  print(score,25,5,7)
  print(buttpress,60,5,7)
