@@ -132,6 +132,7 @@ function draw_game()
    else if beat_x[i] >= 65 and btn(❎) then
     sfx(4)
     score -= 1
+    beat_v[i] = false
    end
    end
   end
@@ -141,9 +142,8 @@ function draw_game()
  circ(63,102,5,7)
  --beat circle
  circ(63,80,4,7)
- print(flr(timer),5,5,7)
- print(score,25,5,7)
- print(beat_s[i],70,5,7)
+ print("timer: "..flr(timer),5,5,7)
+ print("score: "..score,50,5,7)
 end
 
 function draw_gameover()
