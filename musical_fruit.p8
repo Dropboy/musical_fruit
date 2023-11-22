@@ -2,14 +2,10 @@ pico-8 cartridge // http://www.pico-8.com
 version 41
 __lua__
 
-timer = 21
-actual_time = 1200
-
-buttpress = false
-
-level = "bbbbbbbb"
+level = "babababababababa"
 
 function _init()
+ music(0)
  beat={}
  beat.h = 8
  beat.w = 8
@@ -21,11 +17,17 @@ function _init()
  beat.alive = true
  beat.gap = 0
 
- score = 0
-
  build_beat(level)
 
  mode = "start"
+
+ timer = 21
+ actual_time = 1200
+
+ score = 0
+
+ buttpress = false
+
 end
 
 function build_beat(lvl)
@@ -42,17 +44,23 @@ local i,j,o,chr,last
    j+=1
    chr=sub(lvl,i,i)
    if chr == "b" then
-    last = "b"
-    add(beat_x, ( (j-1) + -10 ) * ( beat.w + 2 ) )
-    add(beat_y, 76 + flr ( (j-1) / 11 ) * ( beat.h + 2 ) )
-    add(beat_v, true)
-    add(beat_s, 1)
+    for i = 1,4 do
+     j+=1
+     last = "b" 
+     add(beat_x, ( (j-1) - 40 ) * ( beat.w + 2 ) )
+     add(beat_y, 76)
+     add(beat_v, true)
+     add(beat_s, 1)
+    end
    else if chr == "a" then
-    last = "a"
-    add(beat_x, ( (j-1) + -10 ) * ( beat.w + 2 ) )
-    add(beat_y, 76 + flr ( (j-1) / 11 ) * ( beat.h + 2 ) )
-    add(beat_v, true)
-    add(beat_s, 2)
+    for i = 1,4 do
+     j+=1
+     last = "a"
+     add(beat_x, ( (j-1) - 40 ) * ( beat.w + 2 ) )
+     add(beat_y, 76 )
+     add(beat_v, true)
+     add(beat_s, 2)
+    end
    end
    end
   end
@@ -61,6 +69,7 @@ end
 function _update60()
  timerandcountdown()
 	if mode == "start" then
+  _init()
   draw_start()
   if btnp(❎) then
    mode = "game"
@@ -72,9 +81,7 @@ function _update60()
  elseif mode == "gameover" then
   if btnp(❎) then
    _init()
-   mode = "start"
-   timer = 21
-   actual_time = 1200
+   music(-1)
   end
  end
 end
@@ -84,6 +91,7 @@ function btnprs()
  if btn(❎) then
   buttpress = true
   print("❎",60,100,7)
+  circ(63,80,6,7)
  else
   buttpress = false
  end
@@ -118,10 +126,10 @@ function draw_game()
  -- draw beats
  for i=1,#beat_x do
   if beat_v[i] == true then
-  spr(beat_s[i],beat_x[i],beat_y[i],beat_x[i]+beat.h,beat_x[i]+beat.w)
+  spr(beat_s[i],beat_x[i],beat_y[i])
    -- beat looping if not hit
    if beat_x[i] > 128 then
-    beat_x[i] = -4
+    beat_v[i] = false
    end
    -- beat hit range
    if beat_x[i] >= 59 and beat_x[i] <= 65 and btn(❎) then
@@ -131,8 +139,6 @@ function draw_game()
    -- incorrect beat hit
    else if beat_x[i] >= 65 and btn(❎) then
     sfx(4)
-    score -= 1
-    beat_v[i] = false
    end
    end
   end
@@ -160,14 +166,12 @@ __gfx__
 0070070009aa9a008888200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000009aa0000882000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __sfx__
-1c1000200f4240f4240f4240f4240f4250f4250f42516425164251642516425164251d4251d4251d4251d4251d4241d4241d42413424134251342513425134251342513425134251842518424184241842418424
+1c1000200f4540f4540f4540f4540f4550f4550f45516455164551645516455164551d4551d4551d4551d4551d4541d4541d45413454134551345513455134551345513455134551845518454184541845418454
 1e1000202742127421274212742127421274212742116421164221642216422164221d4221d4221d4221d4221d4261d4261d42605426054260542605426054260542605426054261842618426184261842618424
 021000001d2751d2751d2751d2031d2031d2030f2730f2730f2731d2031d2031d2031227512275122751d2031d2031d2031827318273182731827318273182731820318203182030f2750c2750a2750727505275
-001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+4110001f0005000000000500000000000000000005000000000500000000050000000000000000000500000000050000000005000000000500000000050000000005000000000500000000000000000000000000
 000100002705024050220501f0501d0501b0501805016050000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0001000016050180501b0501d0501f050220502405027050000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __music__
-03 00010244
-
-
+03 00034144
 
